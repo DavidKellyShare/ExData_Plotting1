@@ -9,7 +9,7 @@
 ## 
 ## The data will be loaded and massaged into proper format for plotting
 ## 
-## A file plot1.png will be created in the current directory
+## A file plot4.png will be created in the current directory
 ## 
 ## 
 
@@ -47,19 +47,39 @@ loaddata <- function(zipname="exdata_data_household_power_consumption.zip",
 }
 
 ## Function plotdata
-## Create a plot of the data with the given labels and colors
+## Create a plot of the data with the given labels, lines and legend
 ## 
 plotdata <- function(data) {
-  hist(data,main="Global Active Power", xlab="Global Active Power (killowatts)", ylab="Frequency", col="Red")
+  par(mfcol=c(2,2))
+  ## Plot1
+  plot(data$DateTime, data$Global_active_power, type="S", 
+       xlab="", ylab="Global Active Power (killowatts)")
+  
+  ## Plot2
+  plot(data$DateTime, data$Sub_metering_1, col="Black", type="S", 
+       xlab="", ylab="Energy sub metering")
+  lines(data$DateTime, data$Sub_metering_2, col="Red", type="S" )
+  lines(data$DateTime, data$Sub_metering_3, col="Blue", type="S" )
+  legend("topright",c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),
+         col=c("Black","Red","Blue"),lwd=1)
+  
+  ## Plot3
+  plot(data$DateTime, data$Voltage, col="Black", type="S", 
+       xlab="datetime", ylab="Voltage")
+  
+  ## Plot4
+  plot(data$DateTime, data$Global_reactive_power, col="Black", type="S", 
+       xlab="datetime", ylab="Global_reactive_power")
+  
 }
 
 ## Function savedata
-## Open the output file "plot1.png"
+## Open the output file "plot4.png"
 ## Call the plotdata function
 ## Close the output file
 ## 
 savedata <- function(data) {
-  dev <- png(filename="plot1.png", width=480, height=480 )
+  dev <- png(filename="plot4.png", width=480, height=480 )
   plotdata(data)
   ret <- dev.off()
 }
@@ -71,8 +91,8 @@ savedata <- function(data) {
 print("Loading Household Consumption Data")
 data <- loaddata()
 
-print("Saving Plot to plot1.png")
-savedata(data$Global_active_power)
+print("Saving Plot to plot4.png")
+savedata(data)
 
 print("Done")
 
